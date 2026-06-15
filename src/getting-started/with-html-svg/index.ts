@@ -1,4 +1,4 @@
-import '../../style.css'
+import './style.css'
 
 import core from "@theatre/core"
 import studioRaw from "@theatre/studio"
