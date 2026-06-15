@@ -1,5 +1,29 @@
 import './style.css'
+import projectState from "./theatre-project-state.json"
 import * as THREE from 'three'
+
+import {getProject,types} from "@theatre/core"
+import studioRaw from "@theatre/studio"
+
+// (window as any).__TheatreJS_CoreBundle = core;
+
+console.log(studioRaw);
+
+// Vite
+if (import.meta.env.DEV) {
+  const studio:typeof studioRaw = (studioRaw as any).default || studioRaw;
+  studio.initialize();
+}
+
+// Create a project for the animation
+const project = getProject('THREE.js x Theatre.js',{ state: projectState })
+
+// Create a sheet
+const sheet = project.sheet('Animated scene')
+
+// Play the animation on repeat
+project.ready.then(() => sheet.sequence.play({ iterationCount: Infinity }))
+
 
 /**
  * Camera
@@ -32,6 +56,25 @@ const mesh = new THREE.Mesh(geometry, material)
 mesh.castShadow = true
 mesh.receiveShadow = true
 scene.add(mesh)
+
+// Create a Theatre.js object with the props you want to
+// animate
+const torusKnotObj = sheet.object('Torus Knot', {
+  // Note that the rotation is in radians
+  // (full rotation: 2 * Math.PI)
+  rotation: types.compound({
+    x: types.number(mesh.rotation.x, { range: [-2, 2] }),
+    y: types.number(mesh.rotation.y, { range: [-2, 2] }),
+    z: types.number(mesh.rotation.z, { range: [-2, 2] }),
+  }),
+})
+
+torusKnotObj.onValuesChange((values) => {
+  const { x, y, z } = values.rotation
+
+  mesh.rotation.set(x * Math.PI, y * Math.PI, z * Math.PI)
+})
+
 
 /*
  * Lights
