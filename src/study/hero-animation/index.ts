@@ -7,146 +7,88 @@ import studioRaw from "@theatre/studio"
 
 console.log(core);
 console.log(studioRaw);
-const studio:typeof studioRaw = (studioRaw as any).default || studioRaw;
+const studio: typeof studioRaw = (studioRaw as any).default || studioRaw;
 studio.initialize();
 
-
-// Exported by clicking the project name and "Export Project Name to JSON" button.
-const projectState = {
-  "sheetsById": {
-    "Sheet 1": {
-      "staticOverrides": {
-        "byObject": {
-          ".p-home-section-hero / __title": {
-            "opacity": 0.9936708860759493
-          }
-        }
-      },
-      "sequence": {
-        "subUnitsPerUnit": 30,
-        "length": 8,
-        "type": "PositionalSequence",
-        "tracksByObject": {
-          ".p-home-section-hero / __title": {
-            "trackData": {
-              "LrJ3eujCAE": {
-                "type": "BasicKeyframedTrack",
-                "keyframes": [
-                  {
-                    "id": "i-s2GT5JFm",
-                    "position": 0,
-                    "connectedRight": true,
-                    "handles": [
-                      0.5,
-                      1,
-                      0.107,
-                      1.002
-                    ],
-                    "value": 0,
-                    "type": "bezier"
-                  },
-                  {
-                    "id": "I3Suv35jmV",
-                    "position": 3,
-                    "connectedRight": true,
-                    "handles": [
-                      0.706,
-                      1.3,
-                      0.097,
-                      0.909
-                    ],
-                    "value": 96,
-                    "type": "bezier"
-                  },
-                  {
-                    "id": "M_00uVAeuK",
-                    "position": 5.6,
-                    "connectedRight": true,
-                    "handles": [
-                      0.686,
-                      1.31,
-                      0.5,
-                      0
-                    ],
-                    "value": 0
-                  }
-                ]
-              },
-              "9JzZUrUSb7": {
-                "type": "BasicKeyframedTrack",
-                "__debugName": "Heading 1:[\"opacity\"]",
-                "keyframes": [
-                  {
-                    "id": "EfAPcjrYAy",
-                    "position": 0,
-                    "connectedRight": true,
-                    "handles": [
-                      0.5,
-                      1,
-                      0.23,
-                      1
-                    ],
-                    "value": 0.9936708860759493,
-                    "type": "bezier"
-                  },
-                  {
-                    "id": "hZ-tUkMP4C",
-                    "position": 3,
-                    "connectedRight": true,
-                    "handles": [
-                      0.32,
-                      1,
-                      0.215,
-                      0.61
-                    ],
-                    "value": 0,
-                    "type": "bezier"
-                  },
-                  {
-                    "id": "D5PA_XGfS6",
-                    "position": 5.6,
-                    "connectedRight": true,
-                    "handles": [
-                      0.355,
-                      1,
-                      0.5,
-                      0
-                    ],
-                    "value": 0.9936708860759493
-                  }
-                ]
-              }
-            },
-            "trackIdByPropPath": {
-              "[\"y\"]": "LrJ3eujCAE",
-              "[\"opacity\"]": "9JzZUrUSb7"
-            }
-          }
-        }
-      }
-    }
-  },
-  "definitionVersion": "0.4.0",
-  "revisionHistory": [
-    "clQhOkE65OlDyXge",
-    "vLg01lxRrpP8eGsS"
-  ]
-}
-
-const project = core.getProject('HTML Animation Tutorial',{state:projectState});
+const project = core.getProject('Hero Animation');
 const sheet = project.sheet('Sheet 1');
 // Play the animation on repeat
-project.ready.then(() => sheet.sequence.play({ iterationCount: Infinity }))
+// project.ready.then(() => sheet.sequence.play({ iterationCount: Infinity }))
 
-const obj = sheet.object('.p-home-section-hero / __title', {
-  y: 0, // you can use just a simple default value
-  opacity: core.types.number(1, { range: [0, 1] }), // or use a type constructor to customize
+const createTransformProps = () => ({
+  positionX: 0,
+  positionY: 0,
+  scaleX: core.types.number(1, { range: [0, 4] }),
+  scaleY: core.types.number(1, { range: [0, 4] }),
+  opacity: core.types.number(1, { range: [0, 1] }),
 });
 
-const homeSectionHeroTitleElement = document.querySelector<HTMLHeadingElement>('.p-home-section-hero__title')!;
+const applyTransform = (
+  element: HTMLElement,
+  values: {
+    positionX: number
+    positionY: number
+    scaleX: number
+    scaleY: number
+    opacity: number
+  },
+) => {
+  element.style.transform = `translate(${values.positionX}px, ${values.positionY}px) scale(${values.scaleX}, ${values.scaleY})`;
+  element.style.opacity = `${values.opacity}`;
+};
 
-obj.onValuesChange((obj) => {
-  homeSectionHeroTitleElement.style.transform = `translateY(${obj.y}px)`;
-  homeSectionHeroTitleElement.style.opacity = `${obj.opacity}`;
-});
+const createTransformObject = (objectKey: string, selector: string) => {
+  const element = document.querySelector<HTMLElement>(selector);
+  if (!element) {
+    console.warn(`Element not found: ${selector}`);
+    return null;
+  }
 
+  const obj = sheet.object(objectKey, createTransformProps());
+  obj.onValuesChange((values) => {
+    applyTransform(element, values);
+  });
+
+  return obj;
+};
+
+const heroTransformTargets = [
+  {
+    objectKey: '.p-home-section-hero / __human',
+    selector: '.p-home-section-hero__human',
+  },
+  {
+    objectKey: '.p-home-section-hero / __title',
+    selector: '.p-home-section-hero__title',
+  },
+  {
+    objectKey: '.p-home-section-hero / __date',
+    selector: '.p-home-section-hero__date',
+  },
+  {
+    objectKey: '.p-home-section-hero / __badge',
+    selector: '.p-home-section-hero__badge',
+  },
+  {
+    objectKey: '.p-home-section-hero / __balloon01',
+    selector: '.p-home-section-hero__balloon--01',
+  },
+  {
+    objectKey: '.p-home-section-hero / __balloon02',
+    selector: '.p-home-section-hero__balloon--02',
+  },
+  {
+    objectKey: '.p-home-section-hero / __balloon03',
+    selector: '.p-home-section-hero__balloon--03',
+  },
+  {
+    objectKey: '.p-home-section-hero / __balloon04',
+    selector: '.p-home-section-hero__balloon--04',
+  },
+] as const;
+
+const heroObjects = heroTransformTargets
+  .map(({ objectKey, selector }) => createTransformObject(objectKey, selector))
+  .filter((obj): obj is NonNullable<typeof obj> => obj !== null);
+
+console.log(heroObjects);
