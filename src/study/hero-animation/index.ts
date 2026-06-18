@@ -14,9 +14,11 @@ studio.initialize();
 const project = core.getProject('Hero_Animation',{
   state:projectState,
 });
-const sheet = project.sheet('Sheet 1');
-// Play the animation on repeat
-// project.ready.then(() => sheet.sequence.play({ iterationCount: Infinity }))
+const sheet = project.sheet('Intro');
+project.ready.then(() => {
+  sheet.sequence.position = 0;
+  void sheet.sequence.play({ iterationCount: 1 });
+});
 
 const createTransformProps = () => ({
   positionX: 0,
