@@ -1,4 +1,5 @@
 import './style.scss'
+import projectState from "./Hero_Animation.theatre-project-state.json"
 
 import core from "@theatre/core"
 import studioRaw from "@theatre/studio"
@@ -10,7 +11,9 @@ console.log(studioRaw);
 const studio: typeof studioRaw = (studioRaw as any).default || studioRaw;
 studio.initialize();
 
-const project = core.getProject('Hero Animation');
+const project = core.getProject('Hero_Animation',{
+  state:projectState,
+});
 const sheet = project.sheet('Sheet 1');
 // Play the animation on repeat
 // project.ready.then(() => sheet.sequence.play({ iterationCount: Infinity }))

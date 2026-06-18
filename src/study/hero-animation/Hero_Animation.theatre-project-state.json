@@ -1,0 +1,60 @@
+{
+  "sheetsById": {
+    "Sheet 1": {
+      "staticOverrides": {
+        "byObject": {}
+      },
+      "sequence": {
+        "subUnitsPerUnit": 30,
+        "length": 10,
+        "type": "PositionalSequence",
+        "tracksByObject": {
+          ".p-home-section-hero / __title": {
+            "trackData": {
+              "sToK70HZLf": {
+                "type": "BasicKeyframedTrack",
+                "__debugName": ".p-home-section-hero / __title:[\"opacity\"]",
+                "keyframes": [
+                  {
+                    "id": "qpejRv5J-I",
+                    "position": 0,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 0
+                  },
+                  {
+                    "id": "IMnaNJXq1S",
+                    "position": 1,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 1
+                  }
+                ]
+              }
+            },
+            "trackIdByPropPath": {
+              "[\"opacity\"]": "sToK70HZLf"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitionVersion": "0.4.0",
+  "revisionHistory": [
+    "g8Dd7fruVbNMV8UK",
+    "cxEX3xQS4yEM6x9U"
+  ]
+}
