@@ -73,19 +73,19 @@ const heroTransformTargets = [
     selector: '.p-home-section-hero__badge',
   },
   {
-    objectKey: '.p-home-section-hero / __balloon01',
+    objectKey: '.p-home-section-hero / __balloon / --01',
     selector: '.p-home-section-hero__balloon--01',
   },
   {
-    objectKey: '.p-home-section-hero / __balloon02',
+    objectKey: '.p-home-section-hero / __balloon / --02',
     selector: '.p-home-section-hero__balloon--02',
   },
   {
-    objectKey: '.p-home-section-hero / __balloon03',
+    objectKey: '.p-home-section-hero / __balloon / --03',
     selector: '.p-home-section-hero__balloon--03',
   },
   {
-    objectKey: '.p-home-section-hero / __balloon04',
+    objectKey: '.p-home-section-hero / __balloon / --04',
     selector: '.p-home-section-hero__balloon--04',
   },
 ] as const;
