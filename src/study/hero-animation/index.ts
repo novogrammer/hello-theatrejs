@@ -14,11 +14,8 @@ studio.initialize();
 const project = core.getProject('Hero_Animation',{
   state:projectState,
 });
-const sheet = project.sheet('Intro');
-project.ready.then(() => {
-  sheet.sequence.position = 0;
-  void sheet.sequence.play({ iterationCount: 1 });
-});
+const introSheet = project.sheet('Intro');
+const loopSheet = project.sheet('Loop');
 
 const createTransformProps = () => ({
   positionX: 0,
@@ -38,11 +35,15 @@ const applyTransform = (
     opacity: number
   },
 ) => {
-  element.style.transform = `translate(${values.positionX}px, ${values.positionY}px) scale(${values.scaleX}, ${values.scaleY})`;
+  element.style.transform = `translate(${values.positionX}%, ${values.positionY}%) scale(${values.scaleX}, ${values.scaleY})`;
   element.style.opacity = `${values.opacity}`;
 };
 
-const createTransformObject = (objectKey: string, selector: string) => {
+const createTransformObject = (
+  sheet: ReturnType<typeof project.sheet>,
+  objectKey: string,
+  selector: string,
+) => {
   const element = document.querySelector<HTMLElement>(selector);
   if (!element) {
     console.warn(`Element not found: ${selector}`);
@@ -55,6 +56,12 @@ const createTransformObject = (objectKey: string, selector: string) => {
   });
 
   return obj;
+};
+
+const createSheetObjects = (sheet: ReturnType<typeof project.sheet>) => {
+  return heroTransformTargets
+    .map(({ objectKey, selector }) => createTransformObject(sheet, objectKey, selector))
+    .filter((obj): obj is NonNullable<typeof obj> => obj !== null);
 };
 
 const heroTransformTargets = [
@@ -92,8 +99,15 @@ const heroTransformTargets = [
   },
 ] as const;
 
-const heroObjects = heroTransformTargets
-  .map(({ objectKey, selector }) => createTransformObject(objectKey, selector))
-  .filter((obj): obj is NonNullable<typeof obj> => obj !== null);
+const introObjects = createSheetObjects(introSheet);
+const loopObjects = createSheetObjects(loopSheet);
 
-console.log(heroObjects);
+project.ready.then(async () => {
+  introSheet.sequence.position = 0;
+  await introSheet.sequence.play({ iterationCount: 1 });
+
+  loopSheet.sequence.position = 0;
+  void loopSheet.sequence.play({ iterationCount: Infinity });
+});
+
+console.log({ introObjects, loopObjects });
