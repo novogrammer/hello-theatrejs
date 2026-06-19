@@ -16,6 +16,7 @@ const project = core.getProject('Hero_Animation',{
 });
 const introSheet = project.sheet('Intro');
 const loopSheet = project.sheet('Loop');
+const loopRange: [number, number] = [1, 5];
 
 const createTransformProps = () => ({
   positionX: 0,
@@ -106,8 +107,11 @@ project.ready.then(async () => {
   introSheet.sequence.position = 0;
   await introSheet.sequence.play({ iterationCount: 1 });
 
-  loopSheet.sequence.position = 0;
-  void loopSheet.sequence.play({ iterationCount: Infinity });
+  loopSheet.sequence.position = loopRange[0];
+  void loopSheet.sequence.play({
+    range: loopRange,
+    iterationCount: Infinity,
+  });
 });
 
 console.log({ introObjects, loopObjects });
